@@ -13,7 +13,7 @@ export const metadata = {
   openGraph: {
     title: 'Dhanumithra T | Portfolio',
     description: 'Explore my projects, skills, and experience in software development and AI.',
-    url: 'https://dhanumithra.dev', // Ensure you update this to your actual deployed domain later!
+    url: 'https://dhanumithra.vercel.app/',
     siteName: 'Dhanumithra T Portfolio',
     images: [
       {
