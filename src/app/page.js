@@ -855,8 +855,8 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', padding: isMobile ? '1.5rem 2rem' : '2.5rem 4rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '1rem' : '0', zIndex: 5, pointerEvents: 'none' }}>
             <div>
-              <p style={{ fontFamily: T.sans, fontWeight: 800, letterSpacing: '6px', fontSize: '1.5rem', margin: 0, color: T.text }}>DHANUMITHRA T</p>
-              <p style={{ color: T.secondary, fontSize: '0.75rem', marginTop: '0.4rem', letterSpacing: '4px', fontFamily: T.mono, fontWeight: 700 }}>M.SC. SOFTWARE SYSTEMS</p>
+              <p style={{ fontFamily: T.sans, fontWeight: 800, letterSpacing: isMobile ? '3px' : '6px', fontSize: isMobile ? 'clamp(1.1rem, 5vw, 1.5rem)' : '1.5rem', margin: 0, color: T.text, whiteSpace: 'nowrap' }}>DHANUMITHRA T</p>
+              <p style={{ color: T.secondary, fontSize: isMobile ? '0.65rem' : '0.75rem', marginTop: '0.4rem', letterSpacing: isMobile ? '2px' : '4px', fontFamily: T.mono, fontWeight: 700, whiteSpace: 'nowrap' }}>M.SC. SOFTWARE SYSTEMS</p>
             </div>
             {!isMobile && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 1.8rem', border: `1px solid rgba(129,140,248,0.25)`, backdropFilter: 'blur(12px)', borderRadius: 4 }}>
@@ -873,7 +873,7 @@ export default function Home() {
         {!tab && ready && isMobile && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
-            style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', zIndex: 5, pointerEvents: 'none' }}>
+            style={{ position: 'absolute', bottom: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 5, pointerEvents: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 1.8rem', border: `1px solid rgba(129,140,248,0.25)`, backdropFilter: 'blur(12px)', borderRadius: 4, whiteSpace: 'nowrap' }}>
               <Globe2 size={16} color={T.primary} />
               <span style={{ color: T.muted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '2px', fontFamily: T.mono }}>DRAG TO EXPLORE</span>
@@ -920,7 +920,7 @@ export default function Home() {
             <motion.aside
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 160 }}
-              style={{ position: 'relative', zIndex: 1, width: isMobile ? '100%' : 260, height: isMobile ? 'auto' : '100%', flexShrink: 0, padding: isMobile ? '1.5rem' : '4rem 2.5rem', display: 'flex', flexDirection: isMobile ? 'row' : 'column', justifyContent: isMobile ? 'flex-start' : 'space-between', borderRight: isMobile ? 'none' : `1px solid rgba(255,255,255,0.05)`, borderBottom: isMobile ? `1px solid rgba(255,255,255,0.05)` : 'none', background: 'rgba(255,255,255,0.01)', overflowX: isMobile ? 'auto' : 'visible' }}>
+              style={{ position: 'relative', zIndex: 1, width: isMobile ? '100%' : 260, height: isMobile ? 'auto' : '100%', flexShrink: 0, padding: isMobile ? '1.5rem 4.5rem 1.5rem 1.5rem' : '4rem 2.5rem', display: 'flex', flexDirection: isMobile ? 'row' : 'column', justifyContent: isMobile ? 'flex-start' : 'space-between', borderRight: isMobile ? 'none' : `1px solid rgba(255,255,255,0.05)`, borderBottom: isMobile ? `1px solid rgba(255,255,255,0.05)` : 'none', background: 'rgba(255,255,255,0.01)', overflowX: isMobile ? 'auto' : 'visible' }}>
 
               {/* Section nav dots */}
               <nav style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: isMobile ? '1.5rem' : '0.7rem' }}>
