@@ -9,6 +9,17 @@ import {
   ArrowRight, Sparkles, Trophy, Zap, Globe2, ChevronRight, MapPin
 } from 'lucide-react'
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
+
 /* ═══════════════════════════════ THEME ═══════════════════════════════ */
 const T = {
   primary: '#818cf8',
@@ -575,7 +586,7 @@ function Label({ children }) {
   return <p style={{ fontFamily: T.mono, color: T.muted, fontSize: '0.75rem', letterSpacing: '2px', marginBottom: '0.8rem', textTransform: 'uppercase', fontWeight: 700 }}>{children}</p>
 }
 
-function Content({ tab }) {
+function Content({ tab, isMobile }) {
   const d = DATA[tab]
   const [resOpen, setResOpen] = useState(false)
   const [formStatus, setFormStatus] = useState('idle')
@@ -605,7 +616,7 @@ function Content({ tab }) {
 
     case 'PROJECTS':
       return (
-        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {d.map((p, i) => (
             <GCard key={i} style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
@@ -627,7 +638,7 @@ function Content({ tab }) {
 
     case 'EXPERIENCE':
       return (
-        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {d.map((e, i) => (
             <GCard key={i} style={{ padding: '2rem' }}>
               <div style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
@@ -650,7 +661,7 @@ function Content({ tab }) {
 
     case 'SKILLS':
       return (
-        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
           {Object.entries(d).map(([cat, skills]) => (
             <GCard key={cat} style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
@@ -667,7 +678,7 @@ function Content({ tab }) {
 
     case 'ACHIEVEMENTS':
       return (
-        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.2rem' }}>
+        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.2rem' }}>
           {d.map((item, i) => (
             <GCard key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1.2rem', padding: '1.5rem' }}>
               <div style={{ flexShrink: 0, marginTop: 4 }}>
@@ -736,7 +747,7 @@ function Content({ tab }) {
           </GCard>
 
           {/* Academic stats row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '1rem' }}>
             {[
               { lbl: 'CGPA', val: d.cgpa, color: T.primary },
               { lbl: 'CLASS XII', val: d.board12, color: T.secondary },
@@ -753,10 +764,10 @@ function Content({ tab }) {
 
     case 'CONTACT':
       return (
-        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
+        <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
           
           {/* Left Column: Grid of Info */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
             {[
               { icon: <Mail size={20} color={T.secondary} />, label: 'EMAIL', val: d.email, href: `mailto:${d.email}`, c: T.secondary },
               { icon: <Phone size={20} color={T.primary} />, label: 'PHONE', val: d.phone, href: `tel:${d.phone.replace(/\s+/g, '')}`, c: T.primary },
@@ -817,6 +828,7 @@ function Content({ tab }) {
 export default function Home() {
   const [ready, setReady] = useState(false)
   const [tab, setTab] = useState(null)
+  const isMobile = useIsMobile()
 
   return (
     <main style={{ width: '100vw', height: '100vh', background: T.bg, overflow: 'hidden', position: 'relative', fontFamily: T.sans }}>
@@ -843,7 +855,7 @@ export default function Home() {
         {!tab && ready && (
           <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', padding: '2.5rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 5, pointerEvents: 'none' }}>
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', padding: isMobile ? '1.5rem 2rem' : '2.5rem 4rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '1rem' : '0', zIndex: 5, pointerEvents: 'none' }}>
             <div>
               <p style={{ fontFamily: T.sans, fontWeight: 800, letterSpacing: '6px', fontSize: '1.5rem', margin: 0, color: T.text }}>DHANUMITHRA T</p>
               <p style={{ color: T.secondary, fontSize: '0.75rem', marginTop: '0.4rem', letterSpacing: '4px', fontFamily: T.mono, fontWeight: 700 }}>M.SC. SOFTWARE SYSTEMS</p>
@@ -860,7 +872,7 @@ export default function Home() {
       <AnimatePresence>
         {tab && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            style={{ position: 'absolute', inset: 0, zIndex: 50, display: 'flex', overflow: 'hidden' }}>
+            style={{ position: 'absolute', inset: 0, zIndex: 50, display: 'flex', flexDirection: isMobile ? 'column' : 'row', overflow: 'hidden' }}>
 
             {/* backdrop veil */}
             <div style={{ position: 'absolute', inset: 0, background: 'rgba(3,7,18,0.6)', backdropFilter: 'blur(12px)', pointerEvents: 'none' }} />
@@ -868,7 +880,7 @@ export default function Home() {
             {/* FLOATING CLOSE BUTTON */}
             <button onClick={() => setTab(null)}
               style={{
-                position: 'absolute', top: '2.5rem', right: '3.5rem', zIndex: 100,
+                position: 'absolute', top: isMobile ? '1rem' : '2.5rem', right: isMobile ? '1rem' : '3.5rem', zIndex: 100,
                 width: 48, height: 48, borderRadius: '50%',
                 background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)',
                 border: `1px solid rgba(255,255,255,0.1)`, color: T.text,
@@ -894,10 +906,10 @@ export default function Home() {
             <motion.aside
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 160 }}
-              style={{ position: 'relative', zIndex: 1, width: 260, flexShrink: 0, padding: '4rem 2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRight: `1px solid rgba(255,255,255,0.05)`, background: 'rgba(255,255,255,0.01)' }}>
+              style={{ position: 'relative', zIndex: 1, width: isMobile ? '100%' : 260, height: isMobile ? 'auto' : '100%', flexShrink: 0, padding: isMobile ? '1.5rem' : '4rem 2.5rem', display: 'flex', flexDirection: isMobile ? 'row' : 'column', justifyContent: isMobile ? 'flex-start' : 'space-between', borderRight: isMobile ? 'none' : `1px solid rgba(255,255,255,0.05)`, borderBottom: isMobile ? `1px solid rgba(255,255,255,0.05)` : 'none', background: 'rgba(255,255,255,0.01)', overflowX: isMobile ? 'auto' : 'visible' }}>
 
               {/* Section nav dots */}
-              <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+              <nav style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: isMobile ? '1.5rem' : '0.7rem' }}>
                 {SECTIONS.map(s => (
                   <button key={s} onClick={() => setTab(s)}
                     style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.4rem 0', textAlign: 'left' }}>
@@ -908,7 +920,7 @@ export default function Home() {
               </nav>
 
               {/* Vertical section title */}
-              <div style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: 0, flex: 1, justifyContent: 'flex-end' }}>
+              <div style={{ writingMode: isMobile ? 'horizontal-tb' : 'vertical-rl', transform: isMobile ? 'none' : 'rotate(180deg)', display: isMobile ? 'none' : 'flex', flexDirection: 'column', gap: '1rem', minHeight: 0, flex: 1, justifyContent: 'flex-end' }}>
                 <p style={{ color: 'rgba(255,255,255,0.2)', fontFamily: T.mono, letterSpacing: '5px', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0 }}>PORTFOLIO /</p>
                 <h2 style={{ color: T.text, fontFamily: T.sans, fontWeight: 700, fontSize: `min(2.5rem, ${55 / tab.length}vh)`, letterSpacing: '-1px', lineHeight: 1, whiteSpace: 'nowrap' }}>{tab}</h2>
               </div>
@@ -918,7 +930,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }}
               transition={{ type: 'spring', damping: 26, stiffness: 160, delay: 0.08 }}
-              style={{ position: 'relative', zIndex: 1, flex: 1, padding: '2rem 4rem', overflowY: 'auto', maxWidth: 1100 }}>
+              style={{ position: 'relative', zIndex: 1, flex: 1, padding: isMobile ? '1.5rem' : '2rem 4rem', overflowY: 'auto', maxWidth: 1100 }}>
 
               {/* Content header */}
               <div style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
@@ -926,7 +938,7 @@ export default function Home() {
                 <div style={{ marginTop: '0.8rem', height: 4, width: 60, borderRadius: 2, background: `linear-gradient(90deg, ${T.primary}, ${T.secondary})` }} />
               </div>
 
-              <Content tab={tab} />
+              <Content tab={tab} isMobile={isMobile} />
             </motion.div>
           </motion.div>
         )}
