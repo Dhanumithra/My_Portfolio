@@ -135,7 +135,7 @@ function GlitchBars() {
         opacity: 0.12 + Math.random() * 0.22,
         xOffset: (Math.random() - 0.5) * 6,
       })))
-    }, 120)
+    }, 96)
     return () => clearInterval(iv)
   }, [])
 
@@ -172,26 +172,26 @@ function Preloader({ onDone }) {
   const [shake, setShake] = useState({ x: 0, y: 0 })
   const [colorBurst, setColorBurst] = useState(null) // 'red' | 'cyan' | null
 
-  // Faster glitch jitter — 15% speedup from 80ms → 68ms
+  // Faster glitch jitter — 35% overall speedup
   useEffect(() => {
     const iv = setInterval(() => {
       setGx((Math.random() - 0.5) * 20)
       setGy((Math.random() - 0.5) * 8)
-    }, 68)
+    }, 54)
     return () => clearInterval(iv)
   }, [])
 
-  // Screen shake pulses every ~300ms
+  // Screen shake pulses every ~240ms
   useEffect(() => {
     const iv = setInterval(() => {
       const intensity = Math.random() > 0.7 ? 6 : 2
       setShake({ x: (Math.random() - 0.5) * intensity, y: (Math.random() - 0.5) * intensity * 0.5 })
-      setTimeout(() => setShake({ x: 0, y: 0 }), 80)
-    }, 300)
+      setTimeout(() => setShake({ x: 0, y: 0 }), 64)
+    }, 240)
     return () => clearInterval(iv)
   }, [])
 
-  // Countdown — 15% faster: 750ms → 637ms, burst flash between each tick
+  // Countdown — 35% faster overall, burst flash between each tick, skips 0
   useEffect(() => {
     let c = 3
     const doTick = () => {
@@ -200,18 +200,16 @@ function Preloader({ onDone }) {
         // Color burst between numbers
         const col = c % 2 === 0 ? 'red' : 'cyan'
         setColorBurst(col)
-        setTimeout(() => setColorBurst(null), 80)
+        setTimeout(() => setColorBurst(null), 64)
         setCount(c)
-        setTimeout(doTick, 637)
+        setTimeout(doTick, 510)
       } else {
-        setCount(0)
         setColorBurst('white')
-        setTimeout(() => { setColorBurst(null); setPhase('flash') }, 510)
-        setTimeout(() => setPhase('reveal'), 850)
-        setTimeout(() => { setPhase('exit'); setTimeout(onDone, 700) }, 2380)
+        setTimeout(() => { setColorBurst(null); setPhase('reveal') }, 80)
+        setTimeout(() => { setPhase('exit'); setTimeout(onDone, 560) }, 1900)
       }
     }
-    const initial = setTimeout(doTick, 637)
+    const initial = setTimeout(doTick, 510)
     return () => clearTimeout(initial)
   }, [])
 
