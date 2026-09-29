@@ -300,10 +300,10 @@ function Preloader({ onDone }) {
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.2rem' }}>
 
               {/* Letters slam down */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(1px, 0.6vw, 8px)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(1px, 0.8vw, 8px)', flexWrap: 'nowrap' }}>
                 {'DHANUMITHRA T'.split('').map((ch, i) =>
                   ch === ' '
-                    ? <span key={i} style={{ display: 'inline-block', width: 'clamp(6px, 1.5vw, 20px)' }} />
+                    ? <span key={i} style={{ display: 'inline-block', width: 'clamp(4px, 1.2vw, 20px)' }} />
                     : (
                       <motion.span key={i}
                         initial={{ y: '-150%', opacity: 0, rotate: Math.random() > 0.5 ? -20 : 20 }}
@@ -311,7 +311,7 @@ function Preloader({ onDone }) {
                         transition={{ type: 'spring', stiffness: 260, damping: 20, delay: i * 0.035 }}
                         style={{
                           display: 'inline-block', fontFamily: T.sans, fontWeight: 800,
-                          fontSize: 'clamp(1.8rem, 4.5vw, 4rem)',
+                          fontSize: 'clamp(1.1rem, 6.5vw, 4rem)',
                           color: 'white',
                           textShadow: `3px 0 10px ${T.primary}, -3px 0 10px ${T.secondary}`,
                         }}
@@ -873,7 +873,7 @@ export default function Home() {
         {!tab && ready && isMobile && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
-            style={{ position: 'absolute', bottom: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 5, pointerEvents: 'none' }}>
+            style={{ position: 'absolute', bottom: '4.5rem', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 5, pointerEvents: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 1.8rem', border: `1px solid rgba(129,140,248,0.25)`, backdropFilter: 'blur(12px)', borderRadius: 4, whiteSpace: 'nowrap' }}>
               <Globe2 size={16} color={T.primary} />
               <span style={{ color: T.muted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '2px', fontFamily: T.mono }}>DRAG TO EXPLORE</span>
