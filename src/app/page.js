@@ -379,17 +379,17 @@ function Preloader({ onDone }) {
 
 
 
-function CameraRig({ open }) {
+function CameraRig({ open, isMobile }) {
   const { camera } = useThree()
   useFrame(() => {
-    const target = open ? 38 : 55
+    const target = open ? (isMobile ? 55 : 38) : (isMobile ? 80 : 55)
     camera.fov += (target - camera.fov) * 0.03
     camera.updateProjectionMatrix()
   })
   return null
 }
 
-function Globe({ open }) {
+function Globe({ open, isMobile }) {
   const outer = useRef(), inner = useRef(), ring1 = useRef(), ring2 = useRef()
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime()
@@ -403,7 +403,7 @@ function Globe({ open }) {
     ring2.current.rotation.x = Math.sin(t * 0.05) * 0.3 + 0.8
   })
   return (
-    <group>
+    <group scale={isMobile ? 0.75 : 1}>
       {/* Atmospheric glow sphere */}
       <mesh scale={1.18}>
         <sphereGeometry args={[2.5, 32, 32]} />
@@ -469,7 +469,7 @@ function Asteroids() {
   )
 }
 
-function Nodes({ onSelect, open }) {
+function Nodes({ onSelect, open, isMobile }) {
   const group = useRef()
   useFrame(({ clock }) => {
     group.current.rotation.y = clock.getElapsedTime() * 0.04
@@ -492,8 +492,8 @@ function Nodes({ onSelect, open }) {
               <sphereGeometry args={[0.07, 16, 16]} />
               <meshStandardMaterial color={T.accent} emissive={T.accent} emissiveIntensity={3} />
             </mesh>
-            <Html center distanceFactor={14}>
-              <NodeCard label={s} onSelect={onSelect} open={open} />
+            <Html center distanceFactor={isMobile ? 18 : 14}>
+              <NodeCard label={s} onSelect={onSelect} open={open} isMobile={isMobile} />
             </Html>
           </group>
         </Float>
@@ -502,7 +502,7 @@ function Nodes({ onSelect, open }) {
   )
 }
 
-function NodeCard({ label, onSelect, open }) {
+function NodeCard({ label, onSelect, open, isMobile }) {
   const [hov, setHov] = useState(false)
   return (
     <div
@@ -510,7 +510,7 @@ function NodeCard({ label, onSelect, open }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        padding: '10px 26px',
+        padding: isMobile ? '8px 16px' : '10px 26px',
         background: hov ? T.primary : 'rgba(3,7,18,0.6)',
         border: `1px solid ${hov ? T.primary : 'rgba(255,255,255,0.12)'}`,
         borderLeft: `3px solid ${T.secondary}`,
@@ -518,7 +518,7 @@ function NodeCard({ label, onSelect, open }) {
         cursor: 'pointer',
         fontFamily: T.mono,
         fontWeight: 700,
-        fontSize: '0.8rem',
+        fontSize: isMobile ? '0.7rem' : '0.8rem',
         letterSpacing: '3px',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
@@ -552,7 +552,7 @@ function GCard({ children, style = {}, className = '' }) {
         backdropFilter: 'blur(10px)',
         border: `1px solid ${hov ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)'}`,
         borderRadius: 16,
-        padding: '2.5rem',
+        padding: 'clamp(1.2rem, 4vw, 2.5rem)',
         fontFamily: T.body,
         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         transform: hov ? 'translateY(-2px)' : 'none',
@@ -616,7 +616,7 @@ function Content({ tab, isMobile }) {
       return (
         <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {d.map((p, i) => (
-            <GCard key={i} style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column' }}>
+            <GCard key={i} style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <h3 style={{ color: T.text, fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.5px', fontFamily: T.sans }}>{p.title}</h3>
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
@@ -638,7 +638,7 @@ function Content({ tab, isMobile }) {
       return (
         <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {d.map((e, i) => (
-            <GCard key={i} style={{ padding: '2rem' }}>
+            <GCard key={i}>
               <div style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
                 <h3 style={{ color: T.text, fontSize: '1.3rem', fontWeight: 700, letterSpacing: '-0.5px', fontFamily: T.sans }}>{e.role}</h3>
                 <p style={{ color: T.primary, fontFamily: T.mono, fontWeight: 600, fontSize: '0.85rem', letterSpacing: '1px', marginTop: '0.5rem', marginBottom: '0.5rem' }}>{e.co}</p>
@@ -661,7 +661,7 @@ function Content({ tab, isMobile }) {
       return (
         <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
           {Object.entries(d).map(([cat, skills]) => (
-            <GCard key={cat} style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
+            <GCard key={cat} style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: T.accent }} />
                 <h4 style={{ fontFamily: T.mono, color: T.text, fontSize: '0.85rem', fontWeight: 700, letterSpacing: '1px' }}>{cat.toUpperCase()}</h4>
@@ -678,7 +678,7 @@ function Content({ tab, isMobile }) {
       return (
         <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.2rem' }}>
           {d.map((item, i) => (
-            <GCard key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1.2rem', padding: '1.5rem' }}>
+            <GCard key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1.2rem' }}>
               <div style={{ flexShrink: 0, marginTop: 4 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
               </div>
@@ -701,7 +701,7 @@ function Content({ tab, isMobile }) {
       return (
         <motion.div variants={cV} initial="hidden" animate="show" style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
           {/* Main card */}
-          <GCard style={{ textAlign: 'center', padding: '2.5rem 2rem' }}>
+          <GCard style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: `${T.primary}15`, border: `1px solid ${T.primary}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.2rem' }}>
               <GraduationCap size={28} color={T.primary} />
             </div>
@@ -773,7 +773,7 @@ function Content({ tab, isMobile }) {
               { icon: <Code2 size={20} color={T.text} />, label: 'GITHUB', val: 'Dhanumithra', href: `https://${d.github}`, c: T.text },
             ].map(({ icon, label, val, href, c }) => {
               const inner = (
-                <GCard style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+                <GCard style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: `${c}15`, border: `1px solid ${c}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {icon}
                   </div>
@@ -803,7 +803,7 @@ function Content({ tab, isMobile }) {
               <p style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>{d.location}</p>
             </motion.div>
 
-            <GCard style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+            <GCard style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
               <h4 style={{ color: T.text, fontSize: '1.2rem', fontWeight: 700, fontFamily: T.sans, marginBottom: '1rem' }}>Let's Connect</h4>
               <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', flex: 1 }}>
                 <input name="name" required type="text" placeholder="Your Name" style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: 'white', fontFamily: T.body, fontSize: '0.9rem', outline: 'none' }} />
@@ -834,16 +834,16 @@ export default function Home() {
 
       {/* ── 3D Canvas ── */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 1, cursor: 'grab' }}>
-        <Canvas camera={{ position: [0, 0, 15], fov: 55 }}>
-          <CameraRig open={!!tab} />
+        <Canvas camera={{ position: [0, 0, 15], fov: isMobile ? 80 : 55 }}>
+          <CameraRig open={!!tab} isMobile={isMobile} />
           <ambientLight intensity={0.3} />
           <directionalLight position={[10, 10, 5]} intensity={3} color={T.primary} />
           <directionalLight position={[-10, -10, -5]} intensity={2} color={T.secondary} />
           <pointLight position={[0, 8, 0]} intensity={1.5} color={T.accent} />
           <Stars radius={100} depth={50} count={3500} factor={4} saturation={0} fade speed={0.2} />
           <Asteroids />
-          <Globe open={!!tab} />
-          <Nodes onSelect={setTab} open={!!tab} />
+          <Globe open={!!tab} isMobile={isMobile} />
+          <Nodes onSelect={setTab} open={!!tab} isMobile={isMobile} />
           <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.25} enablePan={false} />
         </Canvas>
       </div>
@@ -858,11 +858,27 @@ export default function Home() {
               <p style={{ fontFamily: T.sans, fontWeight: 800, letterSpacing: '6px', fontSize: '1.5rem', margin: 0, color: T.text }}>DHANUMITHRA T</p>
               <p style={{ color: T.secondary, fontSize: '0.75rem', marginTop: '0.4rem', letterSpacing: '4px', fontFamily: T.mono, fontWeight: 700 }}>M.SC. SOFTWARE SYSTEMS</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 1.8rem', border: `1px solid rgba(129,140,248,0.25)`, backdropFilter: 'blur(12px)', borderRadius: 4 }}>
+            {!isMobile && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 1.8rem', border: `1px solid rgba(129,140,248,0.25)`, backdropFilter: 'blur(12px)', borderRadius: 4 }}>
+                <Globe2 size={16} color={T.primary} />
+                <span style={{ color: T.muted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '2px', fontFamily: T.mono }}>DRAG TO EXPLORE</span>
+              </div>
+            )}
+          </motion.header>
+        )}
+      </AnimatePresence>
+
+      {/* Drag to explore mobile */}
+      <AnimatePresence>
+        {!tab && ready && isMobile && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', zIndex: 5, pointerEvents: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 1.8rem', border: `1px solid rgba(129,140,248,0.25)`, backdropFilter: 'blur(12px)', borderRadius: 4, whiteSpace: 'nowrap' }}>
               <Globe2 size={16} color={T.primary} />
               <span style={{ color: T.muted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '2px', fontFamily: T.mono }}>DRAG TO EXPLORE</span>
             </div>
-          </motion.header>
+          </motion.div>
         )}
       </AnimatePresence>
 
