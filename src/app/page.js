@@ -112,7 +112,7 @@ const DATA = {
     linkedin: 'linkedin.com/in/dhanumithra-t',
     github: 'github.com/Dhanumithra',
     location: 'Coimbatore, Tamil Nadu, India',
-    availability: 'Open to internships & full-time roles',
+    availability: 'Open to internships & part-time roles',
   },
 }
 
